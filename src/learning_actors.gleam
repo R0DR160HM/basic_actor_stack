@@ -1,16 +1,15 @@
-import gleam/erlang/process
 import stack
 
 pub fn main() {
-  let assert Ok(my_actor) = stack.new()
+  let assert Ok(my_stack) = stack.new()
 
-  process.send(my_actor, stack.Push("Airam"))
-  process.send(my_actor, stack.Push("Wilhelm"))
-  process.send(my_actor, stack.Push("Daniel"))
+  stack.push(my_stack, "Airam")
+  stack.push(my_stack, "Wilhelm")
+  stack.push(my_stack, "Daniel")
 
-  let assert Ok("Daniel") = process.call(my_actor, stack.Pop, 10)
-  let assert Ok("Wilhelm") = process.call(my_actor, stack.Pop, 10)
-  let assert Ok("Airam") = process.call(my_actor, stack.Pop, 10)
+  let assert Ok("Daniel") = stack.pop(my_stack)
+  let assert Ok("Wilhelm") = stack.pop(my_stack)
+  let assert Ok("Airam") = stack.pop(my_stack) 
 
-  let assert Error(Nil) = process.call(my_actor, stack.Pop, 10)
+  let assert Error(Nil) = stack.pop(my_stack) 
 }

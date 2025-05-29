@@ -1,7 +1,9 @@
 import gleam/erlang/process.{type Subject}
 import gleam/otp/actor
 
-pub type Message(element) {
+pub type Stack(e) = Subject(Message(e))
+
+pub opaque type Message(element) {
   Shutdown
   Push(push: element)
   Pop(reply_with: Subject(Result(element, Nil)))
@@ -23,6 +25,14 @@ fn handle_message(message: Message(e), stack: List(e)) {
         }
       }
   }
+}
+
+pub fn push(into stack: Stack(e), value value: e) {
+    process.send(stack, Push(value)) 
+}
+
+pub fn pop(from stack: Stack(e)) {
+    process.call_forever(stack, Pop)
 }
 
 pub fn new() {
